@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>띵커벨 🧚 벌금 도장판</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f4f0;padding:16px;}
+.wrap{max-width:480px;margin:0 auto;padding-bottom:40px;}
+h1{font-size:17px;font-weight:600;color:#2C2C2A;margin-bottom:4px;}
+.sync{font-size:11px;color:#999;margin-bottom:12px;height:16px;}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px;}
+.stat{background:#fff;border-radius:10px;padding:10px;text-align:center;border:1px solid #E8E6E0;}
+.stat-n{font-size:15px;font-weight:600;}
+.stat-l{font-size:10px;color:#888;margin-top:2px;}
+.acct{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#fff;border-radius:10px;border:1px solid #E8E6E0;margin-bottom:12px;}
+.copy-btn{margin-left:auto;font-size:11px;padding:4px 10px;border-radius:14px;border:1px solid #ccc;background:#f5f4f0;color:#555;cursor:pointer;}
+.tabs{display:flex;gap:5px;margin-bottom:12px;}
+.tab{padding:6px 14px;border-radius:20px;border:1px solid #ccc;font-size:12px;cursor:pointer;background:#fff;color:#666;}
+.tab.on{background:#534AB7;color:#fff;border-color:#534AB7;font-weight:600;}
+.legend{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.leg{display:flex;align-items:center;gap:4px;font-size:10px;color:#666;}
+.leg-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0;}
+.card{background:#fff;border:1px solid #E8E6E0;border-radius:12px;padding:14px;margin-bottom:8px;}
+.mhead{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;}
+.mname{font-size:13px;font-weight:600;color:#2C2C2A;}
+.badge{font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600;}
+.fine-amt{margin-left:auto;font-size:14px;font-weight:600;}
+.sec-label{font-size:10px;color:#999;margin-bottom:6px;}
+.btn-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-bottom:10px;}
+.btn{height:44px;border-radius:8px;border:1.5px solid #ccc;background:#F5F4F0;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;gap:2px;user-select:none;-webkit-tap-highlight-color:transparent;}
+.btn:active{transform:scale(0.92);}
+.btn-top{font-size:10px;font-weight:600;color:#555;}
+.btn-bot{font-size:9px;color:#999;}
+.btn.absent{background:#FCEBEB;border-color:#E24B4A;}
+.btn.absent .btn-top{color:#791F1F;} .btn.absent .btn-bot{color:#A32D2D;}
+.btn.late{background:#FAEEDA;border-color:#BA7517;}
+.btn.late .btn-top{color:#633806;} .btn.late .btn-bot{color:#854F0B;}
+.btn.free{background:#E1F5EE;border-color:#1D9E75;}
+.btn.free .btn-top{color:#085041;} .btn.free .btn-bot{color:#0F6E56;}
+.hw-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:10px;}
+.hw-btn{height:44px;border-radius:8px;border:1.5px solid #ccc;background:#F5F4F0;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;gap:2px;user-select:none;-webkit-tap-highlight-color:transparent;}
+.hw-btn:active{transform:scale(0.92);}
+.hw-btn .btn-top{font-size:10px;font-weight:600;color:#555;}
+.hw-btn .btn-bot{font-size:9px;color:#999;}
+.hw-btn.hw-miss{background:#FAECE7;border-color:#D85A30;}
+.hw-btn.hw-miss .btn-top{color:#712B13;} .hw-btn.hw-miss .btn-bot{color:#993C1D;}
+.divider{border-top:1px solid #F0EDE8;margin:8px 0;}
+.fine-row{font-size:10px;color:#888;line-height:1.8;margin-bottom:8px;}
+.paid-row{display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid #F0EDE8;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>띵커벨 🧚 벌금 도장판</h1>
+  <div class="sync" id="sync-status">연결 중...</div>
+  <div class="summary">
+    <div class="stat"><div class="stat-n" id="s-total" style="color:#534AB7">0원</div><div class="stat-l">전체 누적</div></div>
+    <div class="stat"><div class="stat-n" id="s-paid" style="color:#1D9E75">0원</div><div class="stat-l">입금 완료</div></div>
+    <div class="stat"><div class="stat-n" id="s-unpaid" style="color:#E24B4A">0원</div><div class="stat-l">미입금</div></div>
+  </div>
+  <div class="acct">
+    <div>
+      <div style="font-size:10px;color:#999;">입금 계좌</div>
+      <div style="font-size:12px;font-weight:600;color:#2C2C2A;">카카오뱅크 3333364879492</div>
+    </div>
+    <button class="copy-btn" id="copy-btn" onclick="copyAcct()">복사</button>
+  </div>
+  <div class="tabs">
+    <div class="tab on" onclick="setMonth(0,this)">4월</div>
+    <div class="tab" onclick="setMonth(1,this)">5월</div>
+    <div class="tab" onclick="setMonth(2,this)">6월</div>
+    <div class="tab" onclick="setMonth(3,this)">전체</div>
+  </div>
+  <div class="legend">
+    <div class="leg"><div class="leg-dot" style="background:#FCEBEB;border:1.5px solid #E24B4A"></div>결석 10,000원</div>
+    <div class="leg"><div class="leg-dot" style="background:#FAEEDA;border:1.5px solid #BA7517"></div>지각 5,000원</div>
+    <div class="leg"><div class="leg-dot" style="background:#E1F5EE;border:1.5px solid #1D9E75"></div>면제</div>
+    <div class="leg"><div class="leg-dot" style="background:#FAECE7;border:1.5px solid #D85A30"></div>과제미제출 10,000원</div>
+  </div>
+  <div id="member-list"><p style="text-align:center;padding:30px;color:#999;font-size:13px;">데이터 불러오는 중...</p></div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCV1lMVQCuf5UaaBeg6t9POk588wwsZNlw",
+  authDomain: "thinkerbell-c680a.firebaseapp.com",
+  databaseURL: "https://thinkerbell-c680a-default-rtdb.firebaseio.com",
+  projectId: "thinkerbell-c680a",
+  storageBucket: "thinkerbell-c680a.firebasestorage.app",
+  messagingSenderId: "525774296201",
+  appId: "1:525774296201:web:86b7e445f9bbcf81b3e258"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const dbRef = ref(db, 'thinkbell');
+
+const MEMBERS=[{name:'이재창',init:'재창'},{name:'조유정',init:'유정'},{name:'윤한솔',init:'한솔'},{name:'기연아',init:'연아'},{name:'김성은',init:'성은'},{name:'이현선',init:'현선'},{name:'김지원',init:'지원'}];
+const COLORS=[{bg:'#E1F5EE',tc:'#085041'},{bg:'#E6F1FB',tc:'#0C447C'},{bg:'#FAEEDA',tc:'#633806'},{bg:'#FBEAF0',tc:'#72243E'},{bg:'#EEEDFE',tc:'#3C3489'},{bg:'#EAF3DE',tc:'#27500A'},{bg:'#FAECE7',tc:'#712B13'}];
+
+// 기획서 기준 일요일 날짜
+const SESSIONS=[
+  {m:0,label:'4/12'},{m:0,label:'4/19'},{m:0,label:'4/26'},{m:0,label:'5/3'},
+  {m:1,label:'5/10'},{m:1,label:'5/17'},{m:1,label:'5/24'},{m:1,label:'5/31'},
+  {m:2,label:'6/7'}, {m:2,label:'6/14'},{m:2,label:'6/21'},{m:2,label:'6/28'},
+];
+
+// 과제 마감: 수업 전날 토요일
+const HOMEWORKS=[
+  {m:0,label:'4/18'},{m:0,label:'5/2'},
+  {m:1,label:'5/16'},{m:1,label:'5/30'},
+  {m:2,label:'6/13'},{m:2,label:'6/27'},
+];
+
+let curMonth=0;
+let S={};
+let isSaving=false;
+
+function initState(){
+  MEMBERS.forEach(({name})=>{S[name]={att:Array(12).fill(0),hw:Array(6).fill(0),paid:[false,false,false]};});
+}
+
+function saveToFirebase(){
+  if(isSaving) return;
+  isSaving=true;
+  document.getElementById('sync-status').textContent='저장 중...';
+  set(dbRef, JSON.parse(JSON.stringify(S))).then(()=>{
+    document.getElementById('sync-status').textContent='✓ 저장됨 — 모든 멤버에게 실시간 반영됨';
+    isSaving=false;
+  }).catch(()=>{
+    document.getElementById('sync-status').textContent='⚠ 저장 실패 — 네트워크 확인';
+    isSaving=false;
+  });
+}
+
+onValue(dbRef, (snapshot)=>{
+  const data=snapshot.val();
+  if(data){
+    S=data;
+    MEMBERS.forEach(({name})=>{
+      if(!S[name]) S[name]={att:Array(12).fill(0),hw:Array(6).fill(0),paid:[false,false,false]};
+      if(!Array.isArray(S[name].att)) S[name].att=Array(12).fill(0);
+      if(!Array.isArray(S[name].hw)) S[name].hw=Array(6).fill(0);
+      if(!Array.isArray(S[name].paid)) S[name].paid=[false,false,false];
+    });
+  } else {
+    initState();
+  }
+  document.getElementById('sync-status').textContent='✓ 실시간 연결됨';
+  renderList();
+});
+
+function isFree(name,idx){const m=SESSIONS[idx].m;let c=0;for(let i=0;i<12;i++){if(SESSIONS[i].m===m&&S[name].att[i]===1){c++;if(i===idx)return c===1;}}return false;}
+function calcMonth(name,month){let a=0,l=0,h=0;SESSIONS.forEach((_,i)=>{if(SESSIONS[i].m!==month)return;if(S[name].att[i]===1&&!isFree(name,i))a++;else if(S[name].att[i]===2)l++;});HOMEWORKS.forEach((_,i)=>{if(HOMEWORKS[i].m===month&&S[name].hw[i]===1)h++;});return{a,l,h,fine:a*10000+l*5000+h*10000};}
+function calcTotal(name){return[0,1,2].reduce((s,m)=>s+calcMonth(name,m).fine,0);}
+function fmt(n){return n.toLocaleString('ko-KR')+'원';}
+function attCls(name,idx){const v=S[name].att[idx];if(v===0)return'';if(v===1)return isFree(name,idx)?'free':'absent';return'late';}
+
+function renderSummary(){
+  let total=0,paid=0,unpaid=0;
+  MEMBERS.forEach(({name})=>{const f=calcTotal(name);total+=f;if(S[name].paid.every(p=>p))paid+=f;else unpaid+=f;});
+  document.getElementById('s-total').textContent=fmt(total);
+  document.getElementById('s-paid').textContent=fmt(paid);
+  document.getElementById('s-unpaid').textContent=fmt(unpaid);
+}
+
+function renderList(){
+  const attIdx=curMonth===3?SESSIONS.map((_,i)=>i):SESSIONS.map((_,i)=>i).filter(i=>SESSIONS[i].m===curMonth);
+  const hwIdx=curMonth===3?HOMEWORKS.map((_,i)=>i):HOMEWORKS.map((_,i)=>i).filter(i=>HOMEWORKS[i].m===curMonth);
+  document.getElementById('member-list').innerHTML=MEMBERS.map(({name,init},mi)=>{
+    const color=COLORS[mi];
+    let fine,fineLines,isPaid;
+    if(curMonth===3){fine=calcTotal(name);isPaid=S[name].paid.every(p=>p);fineLines=[0,1,2].map(m=>{const r=calcMonth(name,m);return`${'4월5월6월'.slice(m*2,m*2+2)}: 결석${r.a} 지각${r.l} 과제${r.h} → ${fmt(r.fine)}`;});}
+    else{const r=calcMonth(name,curMonth);fine=r.fine;isPaid=S[name].paid[curMonth];fineLines=[`결석 ${r.a}회 · 지각 ${r.l}회 · 과제미제출 ${r.h}회 → ${fmt(r.fine)}`];}
+    const attBtns=attIdx.map(i=>{const cls=attCls(name,i);const v=S[name].att[i];const top=v===0?`<span class="btn-top" style="opacity:0.35">${i+1}회</span>`:`<span class="btn-top">${cls==='free'?'면제':cls==='absent'?'결석':'지각'}</span>`;return`<div class="btn ${cls}" onclick="tAtt('${name}',${i})">${top}<span class="btn-bot">${SESSIONS[i].label}</span></div>`;}).join('');
+    const hwBtns=hwIdx.map(i=>{const miss=S[name].hw[i]===1;return`<div class="hw-btn ${miss?'hw-miss':''}" onclick="tHw('${name}',${i})"><span class="btn-top">${miss?'미제출':'제출'}</span><span class="btn-bot">${HOMEWORKS[i].label}</span></div>`;}).join('');
+    return`<div class="card">
+      <div class="mhead"><div class="av" style="background:${color.bg};color:${color.tc}">${init}</div><span class="mname">${name}</span><span class="badge" style="${isPaid?'background:#E1F5EE;color:#085041':'background:#FCEBEB;color:#791F1F'}">${isPaid?'✓ 입금완료':'미입금'}</span><span class="fine-amt" style="color:${fine>0?'#E24B4A':'#bbb'}">${fmt(fine)}</span></div>
+      <div class="sec-label">출석 — 누르면: 정상 → 결석 → 지각</div>
+      <div class="btn-grid">${attBtns}</div>
+      <div class="divider"></div>
+      <div class="sec-label">과제 — 수업 전날 토요일 자정 마감</div>
+      <div class="hw-grid">${hwBtns}</div>
+      <div class="fine-row">${fineLines.join('<br>')}</div>
+      <div class="paid-row">
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" ${isPaid?'checked':''} onchange="tPaid('${name}',${curMonth===3?-1:curMonth},this.checked)" style="width:15px;height:15px;cursor:pointer;"><span style="font-size:12px;color:#666;">${curMonth===3?'전체':'이번 달'} 입금 완료</span></label>
+        <span style="font-size:10px;font-weight:600;color:${isPaid?'#1D9E75':'#E24B4A'}">${isPaid?'✓ 완료':'대기중'}</span>
+      </div>
+    </div>`;
+  }).join('');
+  renderSummary();
+}
+
+window.tAtt=function(name,idx){S[name].att[idx]=S[name].att[idx]===0?1:S[name].att[idx]===1?2:0;renderList();saveToFirebase();};
+window.tHw=function(name,idx){S[name].hw[idx]=S[name].hw[idx]===0?1:0;renderList();saveToFirebase();};
+window.tPaid=function(name,month,val){if(month===-1)S[name].paid=[val,val,val];else S[name].paid[month]=val;renderList();saveToFirebase();};
+window.setMonth=function(m,el){curMonth=m;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');renderList();};
+window.copyAcct=function(){navigator.clipboard.writeText('3333364879492').then(()=>{const b=document.getElementById('copy-btn');b.textContent='복사됨';setTimeout(()=>b.textContent='복사',2000);});};
+</script>
+</body>
+</html>
