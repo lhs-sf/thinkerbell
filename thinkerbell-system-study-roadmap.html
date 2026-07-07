@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&family=Noto+Sans+KR:wght@400;500;600&display=swap');
+
+  :root {
+    --bg: #F4EBFC;
+    --card: #FFFFFF;
+    --ink: #3B1F63;
+    --accent: #9333EA;
+    --accent2: #EC4899;
+    --sage: #C026D3;
+    --clay: #DB2777;
+    --teal: #EC4899;
+    --gold: #A21CAF;
+    --line: #EAD9F7;
+    --faint: #9B8AC4;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background:
+      radial-gradient(circle at 8% 8%, rgba(147,51,234,0.08), transparent 40%),
+      radial-gradient(circle at 95% 20%, rgba(236,72,153,0.08), transparent 40%),
+      radial-gradient(circle at 90% 90%, rgba(168,85,247,0.07), transparent 40%),
+      linear-gradient(180deg, #F9F5FC 0%, #FDF3F7 100%);
+    background-attachment: fixed;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: var(--ink);
+  }
+  .page {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  .hero {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+  .hero .eyebrow {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    margin-bottom: 10px;
+  }
+  .hero h1 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 34px;
+    font-weight: 700;
+    margin: 0 0 12px;
+    line-height: 1.35;
+    background: none;
+    color: var(--accent);
+  }
+  .hero p {
+    font-size: 14px;
+    color: var(--faint);
+    margin: 0;
+  }
+
+  .part-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 56px 0 24px;
+  }
+  .part-label .roman {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 5px 14px;
+    flex-shrink: 0;
+  }
+  .part-label .desc {
+    font-size: 13px;
+    color: var(--faint);
+  }
+  .part-label .rule {
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  .timeline {
+    position: relative;
+  }
+  .item {
+    display: flex;
+    gap: 18px;
+    position: relative;
+    padding-bottom: 26px;
+  }
+  .item:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: 21px;
+    top: 44px;
+    bottom: -4px;
+    width: 2px;
+    background: var(--line);
+  }
+  .node {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: #fff;
+    z-index: 1;
+    box-shadow: 0 3px 8px rgba(147,51,234,0.20);
+  }
+  .card {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 18px 20px;
+    box-shadow: 0 3px 12px rgba(147,51,234,0.05);
+  }
+  .card .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--faint);
+    background: var(--bg);
+    border-radius: 999px;
+    padding: 2px 9px;
+    margin-bottom: 8px;
+  }
+  .card h3 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 18px;
+    margin: 0 0 6px;
+    line-height: 1.4;
+  }
+  .card .oneliner {
+    font-size: 13.5px;
+    color: var(--ink);
+    font-weight: 500;
+    margin: 0 0 12px;
+    opacity: 0.85;
+  }
+  .card ul {
+    margin: 0 0 12px;
+    padding-left: 18px;
+  }
+  .card li {
+    font-size: 13.5px;
+    line-height: 1.6;
+    margin-bottom: 4px;
+    color: #524470;
+  }
+  .card li:last-child { margin-bottom: 0; }
+  .card .quote {
+    font-size: 13px;
+    font-style: italic;
+    color: var(--ink);
+    background: var(--bg);
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin: 0;
+    border-left: 3px solid;
+  }
+
+  .footer-note {
+    margin-top: 48px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--faint);
+  }
+
+  .roadmap {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .road-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px 16px;
+  }
+  .road-date {
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--ink);
+    width: 44px;
+    flex-shrink: 0;
+  }
+  .road-body { flex: 1; }
+  .road-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .road-desc {
+    font-size: 12px;
+    color: var(--faint);
+    margin-top: 2px;
+  }
+  .road-ot {
+    border-color: var(--accent);
+    background: #F1E7FC;
+  }
+  .road-ot .road-date { color: var(--accent); }
+  .road-think {
+    background: #FCE7F3;
+    border-color: var(--accent2);
+  }
+  .road-think .road-date { color: var(--accent2); }
+  .road-last {
+    border-color: var(--gold);
+    background: #F7E6FB;
+  }
+
+  .method-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .method-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 18px 20px;
+    box-shadow: 0 3px 12px rgba(147,51,234,0.05);
+  }
+  .method-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--ink);
+  }
+  .method-steps {
+    margin: 0 0 12px;
+    padding-left: 20px;
+  }
+  .method-steps li {
+    font-size: 13.5px;
+    line-height: 1.7;
+    margin-bottom: 6px;
+    color: #524470;
+  }
+  .method-rules {
+    margin: 0 0 12px;
+    padding-left: 0;
+    list-style: none;
+  }
+  .method-rules li {
+    font-size: 13.5px;
+    line-height: 1.9;
+    color: #524470;
+    border-bottom: 1px dashed var(--line);
+    padding: 4px 0;
+  }
+  .method-rules li:last-child { border-bottom: none; }
+  .rule-note {
+    color: var(--faint);
+    font-size: 12px;
+  }
+  .method-sub {
+    font-size: 12px;
+    color: var(--faint);
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hero">
+    <div style="font-size: 20px; margin-bottom: 6px;">✨🧚✨</div>
+    <div class="eyebrow">🧚 띵커벨 · 8주 시스템 스터디</div>
+    <h1>사람이 아니라<br/>구조를 바꾼다</h1>
+    <p>『무인양품은 90%가 구조다』 스터디 킥오프 — 방향과 핵심 개념 11가지</p>
+  </div>
+
+  <!-- 로드맵 -->
+  <div class="part-label">
+    <span class="roman">Map</span>
+    <span class="desc">8주 로드맵 — 오늘부터 8/25까지</span>
+    <span class="rule"></span>
+  </div>
+  <div class="roadmap">
+    <div class="road-item road-ot">
+      <div class="road-date">7/7</div>
+      <div class="road-body">
+        <div class="road-title">OT — 오늘</div>
+        <div class="road-desc">방향 소개 + 이 노트 소개</div>
+      </div>
+    </div>
+    <div class="road-item">
+      <div class="road-date">7/14</div>
+      <div class="road-body">
+        <div class="road-title">1장 · 구조의 비밀</div>
+        <div class="road-desc">사람을 바꾸는 게 아니라 구조를 만든다</div>
+      </div>
+    </div>
+    <div class="road-item">
+      <div class="road-date">7/21</div>
+      <div class="road-body">
+        <div class="road-title">2장 · 실천하라</div>
+        <div class="road-desc">경험과 감을 배제하라</div>
+      </div>
+    </div>
+    <div class="road-item">
+      <div class="road-date">7/28</div>
+      <div class="road-body">
+        <div class="road-title">3장 · 심플한 원칙</div>
+        <div class="road-desc">타자와 타사에서 배워라</div>
+      </div>
+    </div>
+    <div class="road-item road-think">
+      <div class="road-date">8/4</div>
+      <div class="road-body">
+        <div class="road-title">⭐생각구독 특별주 (7월호)</div>
+        <div class="road-desc">읽고 15분 글쓰기</div>
+      </div>
+    </div>
+    <div class="road-item">
+      <div class="road-date">8/11</div>
+      <div class="road-body">
+        <div class="road-title">4장 · 생산성 3배 구조</div>
+        <div class="road-desc">보상받지 못하는 노력을 없애는 법</div>
+      </div>
+    </div>
+    <div class="road-item">
+      <div class="road-date">8/18</div>
+      <div class="road-body">
+        <div class="road-title">5장 · 스스로 구조화하는 힘</div>
+        <div class="road-desc">자신만의 〈무지그램〉을 만들어라</div>
+      </div>
+    </div>
+    <div class="road-item road-last">
+      <div class="road-date">8/25</div>
+      <div class="road-body">
+        <div class="road-title">6장 + 맺는말 · 종합 회고</div>
+        <div class="road-desc">위키 v1.0 쇼케이스</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="part-label" style="margin-top: 64px;">
+    <span class="roman">How</span>
+    <span class="desc">진행 방법 — 매주 2시간, 8명이 함께</span>
+    <span class="rule"></span>
+  </div>
+  <div class="method-grid">
+    <div class="method-card">
+      <div class="method-title">매주 진행 순서 (2시간)</div>
+      <ol class="method-steps">
+        <li><b>서머라이징 & 방향 맞추기</b> (40분) — 각자 읽은 것 요약, 공통 정의 합의</li>
+        <li><b>적용 관점·사례 나누기</b> (40분) — 내 업무에 어떻게 적용되는지 공유</li>
+        <li><b>지난주 숙제·위키 진행 공유</b> (30분) — 했다/못했다 + 이유 + 결과</li>
+        <li><b>이번 주 숙제 확정</b> (10분) — 담당·기한 포함 한 문장으로 기록</li>
+      </ol>
+      <div class="method-sub">진행자·기록자는 매주 2명씩 로테이션 — 8주 안에 거의 한 번씩 돌아가요</div>
+    </div>
+    <div class="method-card">
+      <div class="method-title">숙제 & 벌금 규정</div>
+      <ul class="method-rules">
+        <li><b>매주 숙제 필수</b> — 생각구독 주간도 예외 없음</li>
+        <li><b>결석</b> 10,000원 <span class="rule-note">(월 1회 면제, 사유 불문)</span></li>
+        <li><b>지각</b> 5,000원 <span class="rule-note">(면제 없음)</span></li>
+        <li><b>숙제 미제출</b> 10,000원 <span class="rule-note">(면제 없음)</span></li>
+      </ul>
+      <div class="method-sub">매주 모임 시작 시 바로 기록 → 그 자리에서 정산</div>
+    </div>
+  </div>
+
+  <div class="part-label" style="margin-top: 64px;">
+    <span class="roman">Notes</span>
+    <span class="desc">오늘 함께 볼 핵심 개념 11가지</span>
+    <span class="rule"></span>
+  </div>
+
+  <!-- I. 세계관 -->
+  <div class="part-label">
+    <span class="roman">Ⅰ</span>
+    <span class="desc">세계관 — 시스템이란 무엇인가</span>
+    <span class="rule"></span>
+  </div>
+  <div class="timeline">
+
+    <div class="item">
+      <div class="node" style="background: var(--ink);">1</div>
+      <div class="card">
+        <span class="tag">인사이트 ①</span>
+        <h3>시스템 = 자연(自然) — 무위이화(無爲而化)</h3>
+        <p class="oneliner">애써 만들지 않아도 저절로 돌아가게 하는 것</p>
+        <ul>
+          <li>自然: 스스로(自) 그러하다(然) — 사람의 힘 없이 스스로 이루어짐</li>
+          <li>무위이화: 애써 공들이지 않아도 저절로 변하여 잘 이루어짐</li>
+          <li>노자경영 4단계 리더: 최상은 "직원이 사장이 있다는 것만 아는" 상태</li>
+        </ul>
+        <p class="quote" style="border-color: var(--ink);">"나는 몇 번째 리더인가?"</p>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="node" style="background: var(--ink);">5</div>
+      <div class="card">
+        <span class="tag">인사이트 ⑤</span>
+        <h3>구조(構造) — 사람 대신 구조를 바꿔라</h3>
+        <p class="oneliner">문제는 사람 탓이 아니라 체계로 해결한다</p>
+        <ul>
+          <li>構(얽을 구)+造(지을 조): 못질 없이 서까래를 끼워 얽히고 설킨 것</li>
+          <li>리더는 처음부터 끝까지 얽힌 전체 구조도를 그릴 수 있어야 한다</li>
+          <li>造는 신에게 구하는 것 — 조물주가 얽고 지은 것처럼 완벽하게</li>
+        </ul>
+        <p class="quote" style="border-color: var(--ink);">"사람을 바꾸려 하지 말고 구조를 바꿔라"</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- II. 관계의 원리 -->
+  <div class="part-label">
+    <span class="roman">Ⅱ</span>
+    <span class="desc">관계의 원리 — 대립하는 것들의 완성</span>
+    <span class="rule"></span>
+  </div>
+  <div class="timeline">
+
+    <div class="item">
+      <div class="node" style="background: var(--sage);">2</div>
+      <div class="card">
+        <span class="tag">인사이트 ②</span>
+        <h3>"위(爲)"의 함정 — 위선·위미</h3>
+        <p class="oneliner">선의 반대는 악이 아니라 위선이다</p>
+        <ul>
+          <li>위한다 = 남을 위해 애쓰는 것 (결혼식 참석, 혼자 일 다 하기, 야근…)</li>
+          <li>"위"를 뺐을 때 비로소 스스로 피어난다</li>
+          <li>자연은 선악을 판단하지 않고 그저 흘러간다</li>
+        </ul>
+        <p class="quote" style="border-color: var(--sage);">"위해서 한 것 중 안 했으면 더 잘 됐을 것들이 있다"</p>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="node" style="background: var(--sage);">3</div>
+      <div class="card">
+        <span class="tag">인사이트 ③</span>
+        <h3>노자 도덕경 2장 — 상생(相生) 6원리</h3>
+        <p class="oneliner">대립하는 것들은 서로를 완성시킨다</p>
+        <ul>
+          <li>相生·相成·相較·相傾·相和·相隨 — 유무, 난이, 장단, 고하, 음성, 전후</li>
+          <li>리더와 팀원처럼, 높고 낮음은 서로 기댄다(相傾)</li>
+          <li>조직 안의 대립항은 한쪽만 있을 수 없다</li>
+        </ul>
+        <p class="quote" style="border-color: var(--sage);">유무상생 난이상성 장단상교 고하상경 음성상화 전후상수</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- III. 성장과 변화 -->
+  <div class="part-label">
+    <span class="roman">Ⅲ</span>
+    <span class="desc">성장과 변화 — 조직의 생애주기</span>
+    <span class="rule"></span>
+  </div>
+  <div class="timeline">
+
+    <div class="item">
+      <div class="node" style="background: var(--teal);">4</div>
+      <div class="card">
+        <span class="tag">인사이트 ④</span>
+        <h3>숲의 은유 — 천이(遷移)</h3>
+        <p class="oneliner">건강한 조직은 흐른다, 고이지 않는다</p>
+        <ul>
+          <li>개척자 나무 → 잎 넓은 나무 → 극상림, 죽어야 할 조직이 남으면 부패</li>
+          <li>조직 내 갈등요소도 미생물처럼 퇴비가 되어 토양을 비옥하게 만든다</li>
+          <li>나무는 혼자 존재하지 않는다 — 나와 연결된 것들을 함께 공부해야</li>
+        </ul>
+        <p class="quote" style="border-color: var(--teal);">"혼자 있는 나무는 없다"</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- IV. 실행의 기술 -->
+  <div class="part-label">
+    <span class="roman">Ⅳ</span>
+    <span class="desc">실행의 기술 — 정하고, 버리고, 맡긴다</span>
+    <span class="rule"></span>
+  </div>
+  <div class="timeline">
+
+    <div class="item">
+      <div class="node" style="background: var(--accent);">6</div>
+      <div class="card">
+        <span class="tag">인사이트 ⑥</span>
+        <h3>바운더리 3단계 — 정한다·가지치기한다·반복한다</h3>
+        <p class="oneliner">엔트로피를 막는 유일한 방법은 정기적으로 덜어내는 것</p>
+        <ul>
+          <li>방치하면 계속 팽창하고 무질서해진다 (엔트로피 법칙)</li>
+          <li>2:8 법칙 — 20%의 노력에서 80%의 성과가 나온다</li>
+          <li>우선순위(균등 분배) 대신 바운더리(핵심 하나에 집중)</li>
+        </ul>
+        <p class="quote" style="border-color: var(--accent);">잡스: "70% 없애기"</p>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="node" style="background: var(--accent);">7</div>
+      <div class="card">
+        <span class="tag">인사이트 ⑦</span>
+        <h3>승인욕구와 단호함 — 개미와 코끼리</h3>
+        <p class="oneliner">천재는 탁월함이 아니라 단호함이다</p>
+        <ul>
+          <li>코끼리는 개미의 승인을 구하지 않는다 — 모두를 만족시키려 하지 않는다</li>
+          <li>다 잘하고 싶은 마음이 오히려 결단을 막는다</li>
+          <li>10명 중 3명을 확실한 내 편으로 만드는 것으로 충분하다</li>
+        </ul>
+        <p class="quote" style="border-color: var(--accent);">"코끼리니까"</p>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="node" style="background: var(--accent);">8</div>
+      <div class="card">
+        <span class="tag">인사이트 ⑧</span>
+        <h3>심플 → 위임 → 반복 → 축적</h3>
+        <p class="oneliner">심플해야 위임이 가능하다</p>
+        <ul>
+          <li>위임은 받는 사람 역량에 맞춰야 (전단지 알바 vs 신입사원 사례)</li>
+          <li>무인양품 3원칙: 반복·축적 / 효과가 나는 것 / 반복 가능한 것만</li>
+          <li>위임의 역방향 확인: "말씀하신 게 이런 것이죠?"</li>
+        </ul>
+        <p class="quote" style="border-color: var(--accent);">디테일할수록 이해는 되지만 실행은 어려워진다</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- V. 조직과 리더십 -->
+  <div class="part-label">
+    <span class="roman">Ⅴ</span>
+    <span class="desc">조직과 리더십 — 보이지 않는 것을 다루는 법</span>
+    <span class="rule"></span>
+  </div>
+  <div class="timeline">
+
+    <div class="item">
+      <div class="node" style="background: var(--clay);">9</div>
+      <div class="card">
+        <span class="tag">인사이트 ⑨</span>
+        <h3>문화(文化) = 집단무의식</h3>
+        <p class="oneliner">사람은 숫자보다 이야기를 기억한다</p>
+        <ul>
+          <li>3원숭이 실험: 원칙보다 금기(터부)가 사람을 더 강하게 움직인다</li>
+          <li>다운로더가 있는 조직 — 이야기가 전달을 넘어 흡수되는 조직</li>
+          <li>별명·밈·유행어는 건강한 조직의 징후</li>
+        </ul>
+        <p class="quote" style="border-color: var(--clay);">"구조는 깨는 것, 문화는 유지·강화하는 것"</p>
+      </div>
+    </div>
+
+    <div class="item">
+      <div class="node" style="background: var(--clay);">10</div>
+      <div class="card">
+        <span class="tag">인사이트 ⑩</span>
+        <h3>리더십 유형 진단</h3>
+        <p class="oneliner">조직·시점마다 필요한 리더가 다르다</p>
+        <ul>
+          <li>노자식 4단계: 스스로 일함 &gt; 존중하며 함께 &gt; 두려워서 시킨 일만 &gt; 무시하고 볼 때만</li>
+          <li>개척자형 vs 가지치기형 — 우열이 아니라 시기의 문제</li>
+          <li>임원 선발: 내부 승진 vs 외부 스카우트</li>
+        </ul>
+        <p class="quote" style="border-color: var(--clay);">"나와 함께하는 게 즐거운 리더인가, 무서운 리더인가"</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- VI. 전략 -->
+  <div class="part-label">
+    <span class="roman">Ⅵ</span>
+    <span class="desc">전략 — 무엇에 힘을 쏟을 것인가</span>
+    <span class="rule"></span>
+  </div>
+  <div class="timeline">
+
+    <div class="item">
+      <div class="node" style="background: var(--gold);">11</div>
+      <div class="card">
+        <span class="tag">인사이트 ⑪</span>
+        <h3>비즈니스모델 — 양날개 전략</h3>
+        <p class="oneliner">단점 보완보다 장점 강화가 더 쉽고 효율적이다</p>
+        <ul>
+          <li>핵심 경쟁력 두 가지를 일치시키면 힘이 강해진다</li>
+          <li>명륜진사갈비: 모회사 고기 유통 + 저가 전략 = 경제적 해자</li>
+          <li>나에게 적용: "무엇을 채워야 팔릴 회사(사람)가 될까?"</li>
+        </ul>
+        <p class="quote" style="border-color: var(--gold);">"무엇을 채웠어야 10배의 가치가 되었을까?"</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">🧚 띵커벨 · 시스템 스터디 노트</div>
+
+</div>
+</body>
+</html>
